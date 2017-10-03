@@ -1,6 +1,6 @@
-public class Q3_1{
+public class Q3_2{
 
-    public static final double eatTime=1000, waitTime=500, baseThinkTime=2000,thinkTime=3000, chopstickPickupTime=50;
+    public static final double eatTime=1000,  waitTime=500,baseThinkTime=2000, thinkTime=3000, chopstickPickupTime=50;
     public static final int numPhilosphers = 5;
     public static Thread[] philosophers;
     public static int[] chopsticks;
@@ -16,6 +16,12 @@ public class Q3_1{
             this.philospherSeatIndex = philospherSeatIndex;
             this.leftChopstickIndex = (philospherSeatIndex+1)%numPhilosphers; //wraps around.
             this.rightChopstickIndex = philospherSeatIndex;
+            //if the lower numbered chopstick is in the right hand, swap chopsticks between hands so that left holds the lower one.
+            if (rightChopstickIndex<leftChopstickIndex) {
+                int temp = rightChopstickIndex;
+                rightChopstickIndex=leftChopstickIndex;
+                leftChopstickIndex = temp;
+            }
             System.out.println(
                     String.format("Philosopher %d just arrived at the table, between chopsticks %d and %d",
                             philospherSeatIndex, leftChopstickIndex, rightChopstickIndex));
@@ -35,26 +41,27 @@ public class Q3_1{
          *  Picks up the two closest chopsticks and eats for a set amount of time.
          */
         public void eat(){
+            System.out.println("Philosopher "+ philospherSeatIndex+" wants to eat.");
             long timeStartedTryingEating = System.currentTimeMillis();
             while (true) {
-                //Keep trying to pick up whatever chopstick not in hand, until both are acquired.
+                // A philosopher must pick up the lower numbered chopstick first before picking up the higher number.
                 if (!hasLeftChopstick) hasLeftChopstick =trypickUpChopstick(leftChopstickIndex);
-                if (!hasRightChopstick) hasRightChopstick = trypickUpChopstick(rightChopstickIndex);
+                if (hasLeftChopstick &&!hasRightChopstick) hasRightChopstick = trypickUpChopstick(rightChopstickIndex);
                 if (hasRightChopstick&&hasLeftChopstick)break;
-                double randomizedWaitTime = Math.random()*waitTime;
-                sleep(randomizedWaitTime); //wait a little bit before trying again.
+                sleep(Math.random()*waitTime);
             }
+
             System.out.println(String.format("Philosopher "+ philospherSeatIndex+" eating after waiting %dms", System.currentTimeMillis()-timeStartedTryingEating));
             sleep(eatTime);
             putDownChopsticks();
         }
 
         /**
-         *  Thinks for a random amount of time with a cap at thinkTime.
+         *  Thinks for a random amount of time with a cap at thinkTime+baseThinkTime.
          */
         public void think(){
             System.out.println("Philosopher "+ philospherSeatIndex+" thinking.");
-            double randomizedThinktime = baseThinkTime+ Math.random()*thinkTime;
+            double randomizedThinktime = baseThinkTime+Math.random()*thinkTime;
             sleep(randomizedThinktime);
         }
 
@@ -71,6 +78,7 @@ public class Q3_1{
                 System.out.println("Philosopher "+ philospherSeatIndex+" picked up chopstick "+i);
                 return true;
             }
+//            System.out.println("Philosopher "+ philospherSeatIndex+" failed to pick up chopstick "+i);
             return false;
         }
 
@@ -80,6 +88,8 @@ public class Q3_1{
             hasLeftChopstick=false;
             hasRightChopstick = false;
             System.out.println("Philosopher "+ philospherSeatIndex+" put down chopsticks");
+            sleep(chopstickPickupTime);
+
         }
 
         public void sleep(double time){
@@ -95,10 +105,10 @@ public class Q3_1{
      * Q3- Dining Philosophers.
      */
     public static void main(String[] args){
-        new Q3_1();
+        new Q3_2();
     }
 
-    public Q3_1(){
+    public Q3_2(){
         this.chopsticks = new int[numPhilosphers];
         this.philosophers = new Thread[numPhilosphers];
         initChopsticks();
