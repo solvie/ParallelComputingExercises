@@ -8,6 +8,7 @@ public class Q3_1{
     class Philosopher implements Runnable{
         int philospherSeatIndex, rightChopstickIndex, leftChopstickIndex;
         boolean hasRightChopstick, hasLeftChopstick;
+
         /**
          * @param philospherSeatIndex refers to the philosopher's position in the circular array. This determines which chopsticks s/he has access to.
          */
@@ -16,7 +17,7 @@ public class Q3_1{
             this.leftChopstickIndex = (philospherSeatIndex+1)%numPhilosphers; //wraps around.
             this.rightChopstickIndex = philospherSeatIndex;
             System.out.println(
-                    String.format("I, Philosopher %d, have just arrived at the table, my left chopstick is %d and my right chopstick is %d",
+                    String.format("Philosopher %d just arrived at the table, between chopsticks %d and %d",
                             philospherSeatIndex, leftChopstickIndex, rightChopstickIndex));
         }
 
@@ -31,13 +32,12 @@ public class Q3_1{
         }
 
         /**
-         *
-         *  Picks up the two closest chopstics and eats for a random amount of time.
+         *  Picks up the two closest chopsticks and eats for a set amount of time.
          */
         public void eat(){
-            //pick up left chopstick as soon as it becomes available, pick up right chopstick
             long timeStartedTryingEating = System.currentTimeMillis();
             while (true) {
+                //Keep trying to pick up whatever chopstick not in hand, until both are acquired.
                 if (!hasLeftChopstick) hasLeftChopstick =trypickUpChopstick(leftChopstickIndex);
                 if (!hasRightChopstick) hasRightChopstick = trypickUpChopstick(rightChopstickIndex);
                 if (hasRightChopstick&&hasLeftChopstick)break;
@@ -51,9 +51,11 @@ public class Q3_1{
             putDownChopsticks();
         }
 
+        /**
+         *  Thinks for a random amount of time with a cap at thinkTime.
+         */
         public void think(){
             System.out.println("Philosopher "+ philospherSeatIndex+" thinking.");
-            //Doesn't think for more than 3 seconds before trying to eat again
             try {
                 double randomizedThinktime = Math.random()*thinkTime;
                 Thread.sleep((long)randomizedThinktime);
@@ -62,6 +64,12 @@ public class Q3_1{
             }
         }
 
+        /**
+         * Takes a small set amount of time to pick up a chopstick.
+         *
+         * @param i index of chopstick to pick up
+         * @return
+         */
         public boolean trypickUpChopstick(int i){
             if (chopsticks[i] == 1) {
                 chopsticks[i] = 0;
@@ -93,7 +101,6 @@ public class Q3_1{
     }
 
     public Q3_1(){
-        System.out.println("Hello world, welcome to Q3");
         this.chopsticks = new int[numPhilosphers];
         this.philosophers = new Thread[numPhilosphers];
         initChopsticks();
@@ -103,7 +110,6 @@ public class Q3_1{
     public void initChopsticks(){
         for (int i=0; i<numPhilosphers; i++)
             this.chopsticks[i] = 1;
-        System.out.println("All chopsticks are on the table.");
     }
 
     public void initPhilosophersAndRun(){
@@ -111,12 +117,5 @@ public class Q3_1{
             this.philosophers[i] = new Thread(new Philosopher(i));
             philosophers[i].start();
         }
-    }
-
-    public void printTableState(){
-        String tableState = "[";
-        for (int i =0; i<numPhilosphers;i++)
-            tableState+=" "+chopsticks[i]+",";
-        System.out.println(tableState =tableState.substring(0,tableState.length()-1)+"]");
     }
 }
