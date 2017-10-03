@@ -1,6 +1,6 @@
 public class Q3_2{
 
-    public static final double eatTime=1000,  waitTime=500,baseThinkTime=2000, thinkTime=3000, chopstickPickupTime=50;
+    public static final double eatTime=3000,  waitTime=100,baseThinkTime=2000, thinkTime=3000, chopstickPickupTime=500;
     public static final int numPhilosphers = 5;
     public static Thread[] philosophers;
     public static int[] chopsticks;

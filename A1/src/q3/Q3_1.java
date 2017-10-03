@@ -1,6 +1,6 @@
 public class Q3_1{
 
-    public static final double eatTime=1000, waitTime=500, baseThinkTime=2000,thinkTime=3000, chopstickPickupTime=50;
+    public static final double eatTime=400, waitTime=100, baseThinkTime=200,thinkTime=400, chopstickPickupTime=200;
     public static final int numPhilosphers = 5;
     public static Thread[] philosophers;
     public static int[] chopsticks;
@@ -44,7 +44,7 @@ public class Q3_1{
                 double randomizedWaitTime = Math.random()*waitTime;
                 sleep(randomizedWaitTime); //wait a little bit before trying again.
             }
-            System.out.println(String.format("Philosopher "+ philospherSeatIndex+" eating after waiting %dms", System.currentTimeMillis()-timeStartedTryingEating));
+            System.out.println(String.format("Philosopher "+ philospherSeatIndex+" eating after waiting %dms....................\\/(^^)%d>", System.currentTimeMillis()-timeStartedTryingEating, philospherSeatIndex));
             sleep(eatTime);
             putDownChopsticks();
         }
@@ -71,6 +71,7 @@ public class Q3_1{
                 System.out.println("Philosopher "+ philospherSeatIndex+" picked up chopstick "+i);
                 return true;
             }
+//            System.out.println("Philosopher "+ philospherSeatIndex+" failed to pick up chopstick "+i);
             return false;
         }
 
