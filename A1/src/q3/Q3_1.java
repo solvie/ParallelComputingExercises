@@ -1,6 +1,10 @@
 public class Q3_1{
+    /**
+     * We can make a deadlock more likely to occur by setting a higher value for chopstickPickupTime (for example 200),
+     * and less likely to occur by setting it lower (50).
+     */
 
-    public static final double eatTime=400, waitTime=100, baseThinkTime=200,thinkTime=400, chopstickPickupTime=200;
+    public static final double eatTime=400, waitTime=100, baseThinkTime=200,thinkTime=400, chopstickPickupTime=50;
     public static final int numPhilosphers = 5;
     public static Thread[] philosophers;
     public static int[] chopsticks;
