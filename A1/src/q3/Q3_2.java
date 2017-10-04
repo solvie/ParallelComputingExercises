@@ -2,8 +2,8 @@ public class Q3_2{
 
     public static final double eatTime=300,  waitTime=100,baseThinkTime=200, thinkTime=300, chopstickPickupTime=50;
     public static final int numPhilosphers = 5;
-    public static Thread[numPhilosphers] philosophers;  //Thread[i] holds philosopher sitting at index i on the table.
-    public static int[numPhilosphers] chopsticks;   //int[i] is 1 if chopstick at index i is on the table, 0 if it is not on the table.
+    public static Thread[] philosophers;  //Thread[i] holds philosopher sitting at index i on the table.
+    public static int[] chopsticks;   //int[i] is 1 if chopstick at index i is on the table, 0 if it is not on the table.
 
     class Philosopher implements Runnable{
         int philospherSeatIndex, rightChopstickIndex, leftChopstickIndex;
@@ -40,7 +40,7 @@ public class Q3_2{
         /**
          *  Picks up the two closest chopsticks and eats for a set amount of time.
          */
-        public void eat(){
+        private void eat(){
             System.out.println("Philosopher "+ philospherSeatIndex+" wants to eat.");
             long timeStartedTryingEating = System.currentTimeMillis();
             while (true) {
@@ -59,7 +59,7 @@ public class Q3_2{
         /**
          *  Thinks for a random amount of time with a cap at thinkTime+baseThinkTime.
          */
-        public void think(){
+        private void think(){
             System.out.println("Philosopher "+ philospherSeatIndex+" thinking.");
             double randomizedThinktime = baseThinkTime+Math.random()*thinkTime;
             sleep(randomizedThinktime);
@@ -71,7 +71,7 @@ public class Q3_2{
          * @param i index of chopstick to pick up
          * @return
          */
-        public boolean trypickUpChopstick(int i){
+        private synchronized boolean trypickUpChopstick(int i){
             if (chopsticks[i] == 1) {
                 chopsticks[i] = 0;
                 sleep(chopstickPickupTime);
@@ -82,7 +82,7 @@ public class Q3_2{
             return false;
         }
 
-        public void putDownChopsticks(){
+        private void putDownChopsticks(){
             chopsticks[leftChopstickIndex]=1;
             chopsticks[rightChopstickIndex]=1;
             hasLeftChopstick=false;
@@ -92,7 +92,7 @@ public class Q3_2{
 
         }
 
-        public void sleep(double time){
+        private void sleep(double time){
             try {
                 Thread.sleep((long)time);
             } catch (InterruptedException e){
