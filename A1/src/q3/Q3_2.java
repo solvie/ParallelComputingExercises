@@ -1,6 +1,6 @@
 public class Q3_2{
 
-    public static final double eatTime=300,  waitTime=100,baseThinkTime=200, thinkTime=300, chopstickPickupTime=50;
+    public static final double eatTime=1000,  waitTime=0,baseThinkTime=2000, thinkTime=0, chopstickPickupTime=50;
     public static final int numPhilosphers = 5;
     public static Thread[] philosophers;  //Thread[i] holds philosopher sitting at index i on the table.
     public static int[] chopsticks;   //int[i] is 1 if chopstick at index i is on the table, 0 if it is not on the table.

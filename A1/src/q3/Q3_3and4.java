@@ -1,7 +1,7 @@
-public class Q3_3{
+public class Q3_3and4{
 
     public static final double eatTime=300,  waitTime=100,baseThinkTime=200, thinkTime=300, chopstickPickupTime=50;
-    public static final int numPhilosphers = 5;
+    public static int numPhilosphers;
     public static Thread[] philosophers;  //Thread[i] holds philosopher sitting at index i on the table.
     public static int[] chopsticks;  //int[i] is j if chopstick at index i is on the table last used by Philosopher j, -1 if it is not on the table.
 
@@ -74,6 +74,8 @@ public class Q3_3{
          */
         public boolean trypickUpChopstick(int i, boolean checkIfLastUsed){
             if (chopsticks[i] != -1) {
+                //pick up the chopstick either if we don't care about last used
+                //or if we do care about last used, and the last used was not me
                 if (!checkIfLastUsed||(checkIfLastUsed&&chopsticks[i]!=philospherSeatIndex)) {
                     chopsticks[i] = -1;
                     sleep(chopstickPickupTime);
@@ -108,10 +110,22 @@ public class Q3_3{
      * Q3- Dining Philosophers.
      */
     public static void main(String[] args){
-        new Q3_3();
+        try {
+            numPhilosphers = Integer.parseInt(args[0]);
+            if (numPhilosphers<2)
+                System.out.println("Please pass an integer value greater than 1 as an argument");
+            else {
+                System.out.println("There are " + numPhilosphers + " philosophers at the table");
+                new Q3_3and4();
+            }
+        } catch (ArrayIndexOutOfBoundsException e){
+            System.out.println("Please pass the number of philosophers as an argument");
+        } catch (NumberFormatException e){
+            System.out.println("Please pass an integer value greater than 1 as an argument");
+        }
     }
 
-    public Q3_3(){
+    public Q3_3and4(){
         this.chopsticks = new int[numPhilosphers];
         this.philosophers = new Thread[numPhilosphers];
         initChopsticks();
