@@ -6,8 +6,8 @@ public class Q3_1{
 
     public static final double eatTime=400, waitTime=100, baseThinkTime=200,thinkTime=400, chopstickPickupTime=50;
     public static final int numPhilosphers = 5;
-    public static Thread[] philosophers;
-    public static int[] chopsticks;
+    public static Thread[numPhilosphers] philosophers;  //Thread[i] holds philosopher sitting at index i on the table.
+    public static int[numPhilosphers] chopsticks;   //int[i] is 1 if chopstick at index i is on the table, 0 if it is not on the table.
 
     class Philosopher implements Runnable{
         int philospherSeatIndex, rightChopstickIndex, leftChopstickIndex;
