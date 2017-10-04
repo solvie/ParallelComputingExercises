@@ -40,7 +40,7 @@ public class Q3_3and4{
         /**
          *  Picks up the two closest chopsticks and eats for a set amount of time.
          */
-        public void eat(){
+        private void eat(){
             System.out.println("Philosopher "+ philospherSeatIndex+" wants to eat.");
             long timeStartedTryingEating = System.currentTimeMillis();
             while (true) {
@@ -60,7 +60,7 @@ public class Q3_3and4{
         /**
          *  Thinks for a random amount of time with a cap at thinkTime+baseThinkTime.
          */
-        public void think(){
+        private void think(){
             System.out.println("Philosopher "+ philospherSeatIndex+" thinking.");
             double randomizedThinktime = baseThinkTime+Math.random()*thinkTime;
             sleep(randomizedThinktime);
@@ -72,7 +72,7 @@ public class Q3_3and4{
          * @param checkIfLastUsed if true, only picks it up if the label is some other philosopher's.
          * @return
          */
-        public boolean trypickUpChopstick(int i, boolean checkIfLastUsed){
+        private synchronized boolean trypickUpChopstick(int i, boolean checkIfLastUsed){
             if (chopsticks[i] != -1) {
                 //pick up the chopstick either if we don't care about last used
                 //or if we do care about last used, and the last used was not me
@@ -87,7 +87,7 @@ public class Q3_3and4{
             return false;
         }
 
-        public void putDownChopsticks(){
+        private void putDownChopsticks(){
             chopsticks[leftChopstickIndex]=philospherSeatIndex;
             chopsticks[rightChopstickIndex]=philospherSeatIndex;
             hasLeftChopstick=false;
@@ -97,7 +97,7 @@ public class Q3_3and4{
 
         }
 
-        public void sleep(double time){
+        private void sleep(double time){
             try {
                 Thread.sleep((long)time);
             } catch (InterruptedException e){
