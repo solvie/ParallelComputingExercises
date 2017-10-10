@@ -1,3 +1,5 @@
+package q3;
+
 public class Q3_2{
 
     public static final double eatTime=1000,  waitTime=0,baseThinkTime=2000, thinkTime=0, chopstickPickupTime=50;

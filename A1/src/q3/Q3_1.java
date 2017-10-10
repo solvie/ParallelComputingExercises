@@ -1,3 +1,5 @@
+package q3;
+
 public class Q3_1{
     /**
      * We can make a deadlock more likely to occur by setting a higher value for chopstickPickupTime (for example 200),
