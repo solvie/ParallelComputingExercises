@@ -86,7 +86,6 @@ public class Q3_3and4{
                     return true;
                 }
             }
-//            System.out.println("Philosopher "+ philospherSeatIndex+" failed to pick up chopstick "+i);
             return false;
         }
 

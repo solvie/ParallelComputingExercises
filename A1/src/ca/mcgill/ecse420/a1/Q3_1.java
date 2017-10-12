@@ -81,7 +81,6 @@ public class Q3_1{
                 System.out.println("Philosopher "+ philospherSeatIndex+" picked up chopstick "+i);
                 return true;
             }
-//            System.out.println("Philosopher "+ philospherSeatIndex+" failed to pick up chopstick "+i);
             return false;
         }
 
