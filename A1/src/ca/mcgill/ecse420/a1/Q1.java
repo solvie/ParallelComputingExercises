@@ -12,13 +12,13 @@ public class Q1 {
         System.out.println("Available processors : " +Runtime.getRuntime().availableProcessors());
 
         //Q1.3
-        //compareSequentialAndParallel2000();
+        compareSequentialAndParallel2000();
         
         //Q1.4
-//        compareParallelAndThreads2000(50); //runs from 1 to 50 threads on matrices 5000 by 5000
+        compareParallelAndThreads2000(50); //runs from 1 to 50 threads on matrices 5000 by 5000
 
         //Q1.5
-//        compareSequentialAndParallelWithMatrixSizeUpTo(4097, NUM_THREADS);
+        compareSequentialAndParallelWithMatrixSizeUpTo(4097, NUM_THREADS);
 
     }
 
@@ -74,8 +74,6 @@ public class Q1 {
     /**
      * This is the unit task for used for parallelization of the matrix computation reading the necessary row and column to compute c(i,j) from 
      * row A and column B.
-     * @author Steven
-     *
      */
     public static class ComputeMatrixUnitTask implements Runnable {
         double[][] result;

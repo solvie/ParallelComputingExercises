@@ -18,8 +18,6 @@ public class Q2 {
     /**
      * Task1 will acquire Lock1 and wait; while Task2 will acquire Lock2, Task1 will be
      * done sleeping and will try to acquire Lock2 but will be blocked since Task2 has the Lock2.
-     * @author Steven
-     *
      */
     static class Task1 implements Runnable {
 
@@ -49,8 +47,6 @@ public class Q2 {
      * After Task2 has acquired Lock2, Task1 will try to acquire Lock1 but it is already acquired
      * by Task1, hence it will be blocked. Since Task1 is blocked for Lock2 and Task2 is blocked
      * for Lock1, we are facing a deadlock.
-     * @author Steven
-     *
      */
     static class Task2 implements Runnable {
 
