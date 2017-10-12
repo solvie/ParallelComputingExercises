@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Q1 {
 
-    public static int NUM_THREADS = 4;
+    public static int NUM_THREADS = 8;
 
     public static void main(String[] args) {
         System.out.println("Hello world, welcome to Q1!");
@@ -73,8 +73,13 @@ public class Q1 {
         return result;
     }
 
+    /**
+     * This is the unit task for used for parallelization of the matrix computation reading the necessary row and column to compute c(i,j) from 
+     * row A and column B.
+     * @author Steven
+     *
+     */
     public static class ComputeMatrixUnitTask implements Runnable {
-
         double[][] result;
         double[][] a;
         double[][] b;
@@ -137,13 +142,19 @@ public class Q1 {
         }
     }
     
+    /**
+     * Question 1.5
+     * Varies the number of matrix size in 2^n iterations and compares the computation speed between sequential and parallel with custom number of threads
+     * @param size      Size of the matrix
+     * @param threads   Number of threads to be used for parallel computation
+     */
     public static void compareSequentialAndParallelWithMatrixSizeUpTo(int size, int threads) {
         NUM_THREADS = threads;
         
-        for (int i = 1; i < 20000; i*=2) {
-        System.out.println("-------Matrix Size : " + size + "---------");
-            double[][] D = generateSquareMatrixOfSize(size);
-            double[][] E = generateSquareMatrixOfSize(size);
+        for (int i = 1; i < size; i*=2) {
+        System.out.println("-------Matrix Size : " + i + "---------");
+            double[][] D = generateSquareMatrixOfSize(i);
+            double[][] E = generateSquareMatrixOfSize(i);
     
             long startTime = System.currentTimeMillis();
             sequentialMultiplyMatrix(D,E);
@@ -158,6 +169,10 @@ public class Q1 {
     }
 
 
+    /**
+     * Prints the matrix into console.
+     * @param matrix
+     */
     public static void printMatrix(double[][] matrix) {
         for(int row = 0; row < matrix.length; row++) {
             for(int column = 0; column < matrix[row].length; column++)
@@ -166,6 +181,11 @@ public class Q1 {
         }
     }
 
+    /**
+     * Generates a simple square matrix
+     * @param n
+     * @return
+     */
     public static double[][] generateSquareMatrixOfSize(int n) {
         double[][] m = new double[n][n];
 
