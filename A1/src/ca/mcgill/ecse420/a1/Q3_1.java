@@ -2,14 +2,17 @@ package ca.mcgill.ecse420.a1;
 
 public class Q3_1{
     /**
-     * We can make a deadlock more likely to occur by setting a higher value for chopstickPickupTime (for example 200),
+     * We can make a deadlock more likely to occur by setting a higher value for CHOPSTICK_PICKUP_TIME (for example 200),
      * and less likely to occur by setting it lower (50).
      */
 
-    public static final double eatTime=400, waitTime=100, baseThinkTime=200,thinkTime=400, chopstickPickupTime=50;
-    public static final int numPhilosphers = 5;
+    public static final double EAT_TIME=400, WAIT_TIME=100, BASE_THINK_TIME=200,THINK_TIME=400, CHOPSTICK_PICKUP_TIME=50;
+    public static final int NUM_PHILOSOPHERS = 5;
     public static Thread[] philosophers;  //Thread[i] holds philosopher sitting at index i on the table.
     public static int[] chopsticks;   //int[i] is 1 if chopstick at index i is on the table, 0 if it is not on the table.
+    
+    public static final int CHOPSTICK_DOWN = 1;
+    public static final int CHOPSTICK_UP = 0;
 
     class Philosopher implements Runnable{
         int philospherSeatIndex, rightChopstickIndex, leftChopstickIndex;
@@ -20,7 +23,7 @@ public class Q3_1{
          */
         public Philosopher(int philospherSeatIndex){
             this.philospherSeatIndex = philospherSeatIndex;
-            this.leftChopstickIndex = (philospherSeatIndex+1)%numPhilosphers; //wraps around.
+            this.leftChopstickIndex = (philospherSeatIndex+1) % NUM_PHILOSOPHERS; //wraps around.
             this.rightChopstickIndex = philospherSeatIndex;
             System.out.println(
                     String.format("Philosopher %d just arrived at the table, between chopsticks %d and %d",
@@ -44,24 +47,25 @@ public class Q3_1{
             long timeStartedTryingEating = System.currentTimeMillis();
             while (true) {
                 //Keep trying to pick up whatever chopstick not in hand, until both are acquired.
-                if (!hasLeftChopstick) hasLeftChopstick =trypickUpChopstick(leftChopstickIndex);
+                if (!hasLeftChopstick) hasLeftChopstick = trypickUpChopstick(leftChopstickIndex);
                 if (!hasRightChopstick) hasRightChopstick = trypickUpChopstick(rightChopstickIndex);
-                if (hasRightChopstick&&hasLeftChopstick)break;
-                double randomizedWaitTime = Math.random()*waitTime;
+                if (hasRightChopstick && hasLeftChopstick) 
+                    break;
+                double randomizedWaitTime = Math.random() * WAIT_TIME;
                 sleep(randomizedWaitTime); //wait a little bit before trying again.
             }
             System.out.println(String.format("Philosopher "+ philospherSeatIndex+" eating after waiting %dms....................\\/(^^)%d>", System.currentTimeMillis()-timeStartedTryingEating, philospherSeatIndex));
-            sleep(eatTime);
+            sleep(EAT_TIME);
             putDownChopsticks();
         }
 
         /**
-         *  Thinks for a random amount of time with a cap at thinkTime.
+         *  Thinks for a random amount of time with a cap at THINK_TIME.
          */
         private void think(){
             System.out.println("Philosopher "+ philospherSeatIndex+" thinking.");
-            double randomizedThinktime = baseThinkTime+ Math.random()*thinkTime;
-            sleep(randomizedThinktime);
+            double randomizedThinkTime = BASE_THINK_TIME + Math.random()*THINK_TIME;
+            sleep(randomizedThinkTime);
         }
 
         /**
@@ -71,9 +75,9 @@ public class Q3_1{
          * @return
          */
         private synchronized boolean trypickUpChopstick(int i){
-            if (chopsticks[i] == 1) {
-                chopsticks[i] = 0;
-                sleep(chopstickPickupTime);
+            if (chopsticks[i] == CHOPSTICK_DOWN) {
+                chopsticks[i] = CHOPSTICK_UP;
+                sleep(CHOPSTICK_PICKUP_TIME);
                 System.out.println("Philosopher "+ philospherSeatIndex+" picked up chopstick "+i);
                 return true;
             }
@@ -82,9 +86,9 @@ public class Q3_1{
         }
 
         private void putDownChopsticks(){
-            chopsticks[leftChopstickIndex]=1;
-            chopsticks[rightChopstickIndex]=1;
-            hasLeftChopstick=false;
+            chopsticks[leftChopstickIndex] = CHOPSTICK_DOWN;
+            chopsticks[rightChopstickIndex] = CHOPSTICK_DOWN;
+            hasLeftChopstick = false;
             hasRightChopstick = false;
             System.out.println("Philosopher "+ philospherSeatIndex+" put down chopsticks");
         }
@@ -106,19 +110,19 @@ public class Q3_1{
     }
 
     public Q3_1(){
-        this.chopsticks = new int[numPhilosphers];
-        this.philosophers = new Thread[numPhilosphers];
+        this.chopsticks = new int[NUM_PHILOSOPHERS];
+        this.philosophers = new Thread[NUM_PHILOSOPHERS];
         initChopsticks();
         initPhilosophersAndRun();
     }
 
     public void initChopsticks(){
-        for (int i=0; i<numPhilosphers; i++)
-            this.chopsticks[i] = 1;
+        for (int i = 0; i < NUM_PHILOSOPHERS; i++)
+            this.chopsticks[i] = CHOPSTICK_DOWN;
     }
 
     public void initPhilosophersAndRun(){
-        for (int i=0; i<numPhilosphers; i++) {
+        for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
             this.philosophers[i] = new Thread(new Philosopher(i));
             philosophers[i].start();
         }
