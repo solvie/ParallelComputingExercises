@@ -20,8 +20,6 @@ public class Q1 {
         //Q1.5
 //        compareSequentialAndParallelWithMatrixSizeUpTo(4097, NUM_THREADS);
 
-
-
     }
 
     /**
