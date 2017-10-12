@@ -1,4 +1,4 @@
-package q3;
+package ca.mcgill.ecse420.a1;
 
 public class Q3_1{
     /**

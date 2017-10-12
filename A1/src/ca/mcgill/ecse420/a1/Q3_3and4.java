@@ -1,11 +1,11 @@
-package q3;
+package ca.mcgill.ecse420.a1;
 
-public class Q3_2{
+public class Q3_3and4{
 
-    public static final double eatTime=1000,  waitTime=0,baseThinkTime=2000, thinkTime=0, chopstickPickupTime=50;
-    public static final int numPhilosphers = 5;
+    public static final double eatTime=300,  waitTime=100,baseThinkTime=200, thinkTime=300, chopstickPickupTime=50;
+    public static int numPhilosphers;
     public static Thread[] philosophers;  //Thread[i] holds philosopher sitting at index i on the table.
-    public static int[] chopsticks;   //int[i] is 1 if chopstick at index i is on the table, 0 if it is not on the table.
+    public static int[] chopsticks;  //int[i] is j if chopstick at index i is on the table last used by Philosopher j, -1 if it is not on the table.
 
     class Philosopher implements Runnable{
         int philospherSeatIndex, rightChopstickIndex, leftChopstickIndex;
@@ -47,8 +47,9 @@ public class Q3_2{
             long timeStartedTryingEating = System.currentTimeMillis();
             while (true) {
                 // A philosopher must pick up the lower numbered chopstick first before picking up the higher number.
-                if (!hasLeftChopstick) hasLeftChopstick =trypickUpChopstick(leftChopstickIndex);
-                if (hasLeftChopstick &&!hasRightChopstick) hasRightChopstick = trypickUpChopstick(rightChopstickIndex);
+                // Also, if the lower numbered chopstick was used last by this philosopher, they must wait for someone else to use it befcre they can eat next.
+                if (!hasLeftChopstick) hasLeftChopstick =trypickUpChopstick(leftChopstickIndex,true);
+                if (hasLeftChopstick &&!hasRightChopstick) hasRightChopstick = trypickUpChopstick(rightChopstickIndex,false);
                 if (hasRightChopstick&&hasLeftChopstick)break;
                 sleep(Math.random()*waitTime);
             }
@@ -69,24 +70,28 @@ public class Q3_2{
 
         /**
          * Takes a small set amount of time to pick up a chopstick.
-         *
-         * @param i index of chopstick to pick up
+         * @param iindex of chopstick to pick up
+         * @param checkIfLastUsed if true, only picks it up if the label is some other philosopher's.
          * @return
          */
-        private synchronized boolean trypickUpChopstick(int i){
-            if (chopsticks[i] == 1) {
-                chopsticks[i] = 0;
-                sleep(chopstickPickupTime);
-                System.out.println("Philosopher "+ philospherSeatIndex+" picked up chopstick "+i);
-                return true;
+        private synchronized boolean trypickUpChopstick(int i, boolean checkIfLastUsed){
+            if (chopsticks[i] != -1) {
+                //pick up the chopstick either if we don't care about last used
+                //or if we do care about last used, and the last used was not me
+                if (!checkIfLastUsed||(checkIfLastUsed&&chopsticks[i]!=philospherSeatIndex)) {
+                    chopsticks[i] = -1;
+                    sleep(chopstickPickupTime);
+                    System.out.println("Philosopher " + philospherSeatIndex + " picked up chopstick " + i);
+                    return true;
+                }
             }
 //            System.out.println("Philosopher "+ philospherSeatIndex+" failed to pick up chopstick "+i);
             return false;
         }
 
         private void putDownChopsticks(){
-            chopsticks[leftChopstickIndex]=1;
-            chopsticks[rightChopstickIndex]=1;
+            chopsticks[leftChopstickIndex]=philospherSeatIndex;
+            chopsticks[rightChopstickIndex]=philospherSeatIndex;
             hasLeftChopstick=false;
             hasRightChopstick = false;
             System.out.println("Philosopher "+ philospherSeatIndex+" put down chopsticks");
@@ -107,10 +112,22 @@ public class Q3_2{
      * Q3- Dining Philosophers.
      */
     public static void main(String[] args){
-        new Q3_2();
+        try {
+            numPhilosphers = Integer.parseInt(args[0]);
+            if (numPhilosphers<2)
+                System.out.println("Please pass an integer value greater than 1 as an argument");
+            else {
+                System.out.println("There are " + numPhilosphers + " philosophers at the table");
+                new Q3_3and4();
+            }
+        } catch (ArrayIndexOutOfBoundsException e){
+            System.out.println("Please pass the number of philosophers as an argument");
+        } catch (NumberFormatException e){
+            System.out.println("Please pass an integer value greater than 1 as an argument");
+        }
     }
 
-    public Q3_2(){
+    public Q3_3and4(){
         this.chopsticks = new int[numPhilosphers];
         this.philosophers = new Thread[numPhilosphers];
         initChopsticks();
@@ -119,7 +136,7 @@ public class Q3_2{
 
     public void initChopsticks(){
         for (int i=0; i<numPhilosphers; i++)
-            this.chopsticks[i] = 1;
+            this.chopsticks[i] = numPhilosphers+1; //nobody has used it at first, so set to arbitrary out of index number.
     }
 
     public void initPhilosophersAndRun(){

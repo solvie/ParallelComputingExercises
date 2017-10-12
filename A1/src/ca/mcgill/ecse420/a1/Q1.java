@@ -1,4 +1,4 @@
-package q1;
+package ca.mcgill.ecse420.a1;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +18,7 @@ public class Q1 {
 //        compareParallelAndThreads2000(50); //runs from 1 to 50 threads on matrices 5000 by 5000
 
         //Q1.5
-//        compareSequentialAndParallelWithMatrixSizeUpTo(200000, NUM_THREADS);
+//        compareSequentialAndParallelWithMatrixSizeUpTo(4097, NUM_THREADS);
 
 
 
