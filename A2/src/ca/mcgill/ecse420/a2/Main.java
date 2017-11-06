@@ -33,14 +33,14 @@ public class Main {
 
     }
 
-    // A thread for adding a penny to the account
+    // A thread for adding a penny to the account using a Filter Lock
     public static class AddAPennyTaskFilter implements Runnable {
         public void run() {
             account.depositWithFilterLock(1);
         }
     }
 
-    // A thread for adding a penny to the account
+    // A thread for adding a penny to the account using a Bakery Lock
     public static class AddAPennyTaskBakery implements Runnable {
         public void run() {
             account.depositWithBakeryLock(1);
