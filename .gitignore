@@ -4,3 +4,5 @@ A1/.project
 A1/bin/
 A1/src/q3/*.class
 .idea
+*.iml
+A2/out/
