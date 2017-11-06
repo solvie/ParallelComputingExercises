@@ -24,7 +24,7 @@ public class FilterLock {
         for (int i = 1; i< numThreads; i++) {
             level[me]= i;
             victim[i]= me;
-            while (existsThreadAtSameOrHigherLevel(me, i) && victim[i] == me);
+            while (existsThreadAtSameOrHigherLevel(me, i) && victim[i] == me);//spin
 
         }
     }
