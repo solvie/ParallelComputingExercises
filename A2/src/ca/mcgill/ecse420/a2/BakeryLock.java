@@ -25,9 +25,9 @@ public class BakeryLock {
         flag[me]= true;
         label[me] = findMax()+1;
         for (int k =0; k<numThreads; k++)
-            while((k != me) &&
-                    flag[k] &&
-                        ((label[k] < label[me]) || ((label[k] == label[me]) && k < me)));//spin
+            while((k != me) && //While there exists another thread
+                    flag[k] && //That wants to acquire the lock
+                        (label[k] < label[me]));//And whose label is lower than mine, spin
     }
 
     /**
