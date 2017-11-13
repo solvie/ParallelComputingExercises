@@ -16,7 +16,8 @@ public class Main {
             pool[i].join();
 
         System.out.println("FilterLock with "+nThreads+" AddAPennyTasks");
-        System.out.println("What is balance ? " + account.getBalance());
+        System.out.println("Balance is: " + account.getBalance());
+        System.out.print("\n");
 
         account.resetBalance();
         ThreadID.reset();
@@ -29,8 +30,23 @@ public class Main {
             pool[i].join();
 
         System.out.println("BakeryLock with "+nThreads+" AddAPennyTasks");
-        System.out.println("What is balance ? " + account.getBalance());
+        System.out.println("Balance is: " + account.getBalance());
+        System.out.print("\n");
 
+
+        account.resetBalance();
+        ThreadID.reset();
+
+        for (int i = 0; i < nThreads; i++)
+            pool[i] = new Thread(new AddAPennyUnlocked());
+        for (int i = 0; i < nThreads; i++)
+            pool[i].start();
+        for (int i = 0; i < nThreads; i++)
+            pool[i].join();
+
+        System.out.println("No lock with "+nThreads+" AddAPennyTasks");
+        System.out.println("Balance is: " + account.getBalance());
+        System.out.print("\n");
     }
 
     // A thread for adding a penny to the account using a Filter Lock
@@ -44,6 +60,13 @@ public class Main {
     public static class AddAPennyTaskBakery implements Runnable {
         public void run() {
             account.depositWithBakeryLock(1);
+        }
+    }
+
+    // A thread for adding a penny to the account without using Locks
+    public static class AddAPennyUnlocked implements Runnable {
+        public void run() {
+            account.depositWithoutLock(1);
         }
     }
 
@@ -81,6 +104,14 @@ public class Main {
                 System.err.println("Interrupted Exception Occurred!");
             } finally {
                 bakeryLock.unlock(); // Release the lock
+            }
+        }
+
+        public void depositWithoutLock(int amount){
+            try {
+                depositAction(amount);
+            } catch (InterruptedException ex) {
+                System.err.println("Interrupted Exception Occurred!");
             }
         }
 
