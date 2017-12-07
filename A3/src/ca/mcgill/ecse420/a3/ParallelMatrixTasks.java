@@ -2,42 +2,35 @@ package ca.mcgill.ecse420.a3;
 
 import java.util.concurrent.*;
 
-
 /**
- * Created by solvie on 2017-12-03.
+ * Class to describe parallel Matrix tasks
  */
 public class ParallelMatrixTasks {
     public static int NUM_THREADS = 4;
-  //  static ExecutorService exec = Executors.newWorkStealingPool(NUM_THREADS);
     static ForkJoinPool pool = new ForkJoinPool(NUM_THREADS);
 
-//    static Vector parallelAdd(Vector a, Vector b) throws ExecutionException, InterruptedException {
-//        int n = a.getDim();
-//        Vector c = new Vector(n, false);
-//        long startTime = System.currentTimeMillis();
-//    //    Future<?> future = exec.submit(new AddTask(a,b,c));
-////        pool.invoke(new VectorAddTask(a,b,c));
-//        future.get();
-//        long endTime = System.currentTimeMillis();
-//        System.out.println("Parallel runtime : " + (endTime - startTime) + "ms");
-//        return c;
-//    }
-
+    /**
+     * The main parallel multiplication task
+     * @param a matrix
+     * @param b vector
+     * @return vector result
+     * @throws Exception
+     */
     static Vector parallelMult(Matrix a, Vector b) throws Exception{
         int n = a.getDim();
         Vector c = new Vector(n, false);
         MulTask mainTask =  new MulTask(a, b, c);
-       // Future future = executor.submit(mainTask);
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
         long startTime = System.currentTimeMillis();
-        forkJoinPool.invoke(mainTask);
+        pool.invoke(mainTask);
         long endTime = System.currentTimeMillis();
         System.out.println("Parallel runtime : " + (endTime - startTime) + "ms");
         return c;
     }
 
+    /**
+     * Inner class to handle recursive vector adding
+     */
     static class VectorAddTask extends RecursiveAction{
-      //  Matrix a,b,c;
         Vector a,b,c;
 
         public VectorAddTask(Vector a, Vector b, Vector c){
@@ -64,6 +57,9 @@ public class ParallelMatrixTasks {
         }
     }
 
+    /**
+     * Inner class to handle recursive matrix vector multiplication
+     */
     static class MulTask extends RecursiveAction{
         Matrix a;
         Vector b,c;
@@ -85,18 +81,11 @@ public class ParallelMatrixTasks {
                     Matrix[][] aa = a.split();
                     Vector[] bb = b.split(), cc = c.split();
                     Vector[] ll = lhs.split(), rr = rhs.split();
-                    //Future<?>[][] future = (Future<?>[][]) new Future[2][2];
                     for (int i = 0; i < 2; i++) {
                         invokeAll(
                                 new MulTask(aa[i][0], bb[i], ll[i]),
                             new MulTask(aa[i][1], bb[i], rr[i]));
                     }
-//                    for(int i =0; i<2; i++)
-//                        for (int j = 0; j<2; j++)
-//                            for(int k =0; k<2; k++)
-//                                future[i][j][k].get();
-//                    Future<?> done = exec.submit(new AddTask(lhs,rhs, c));
-//                    done.get();
                     invokeAll(new VectorAddTask(lhs, rhs, c));
                 }
             } catch(Exception ex){

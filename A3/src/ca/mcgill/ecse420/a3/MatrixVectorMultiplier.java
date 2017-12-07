@@ -1,23 +1,29 @@
 package ca.mcgill.ecse420.a3;
 
+/**
+ * Main class to house a Matrix Vector multiplication task
+ */
 public class MatrixVectorMultiplier {
     public static void main(String[] args) throws Exception{
         System.out.println("Hello world, welcome to Matrix Vector Multiplier!");
         System.out.println("Available processors : " +Runtime.getRuntime().availableProcessors());
 
-        Vector a = new Vector(16, true);
+        //Initialize Vector and Matrix
+        Vector a = new Vector(2048, true);
         System.out.println("");
-        Matrix b = new Matrix(16, true);
+        Matrix b = new Matrix(2048, true);
         System.out.println("");
         Vector c = new Vector(16, false);
 
+        //Multiply in parallel
         c= ParallelMatrixTasks.parallelMult(b,a);
-        printVector(c);
 
+        //Multiply in sequential
         long startTime = System.currentTimeMillis();
         double[] result= sequentialMultiplyMatrixVector(b.getData(), a.getData());
         long endTime = System.currentTimeMillis();
 
+        //Print sequential runtime (parallel runtime prints in ParallelMatrixTasks class)
         System.out.println("Sequential runtime : " + (endTime - startTime) + "ms");
     }
 
